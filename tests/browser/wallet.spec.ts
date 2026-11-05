@@ -29,7 +29,7 @@ test("wallet approves exact amounts, books, leaves and refunds without host inte
   const latest=await call("eth_getBlockByNumber",["latest",false]);const at=Number(BigInt(latest.timestamp));
   const deadline=Math.ceil((at+900)/60)*60,start=deadline+3600,end=start+3600;
   await host.goto("/?mode=live");await host.getByRole("button",{name:"Connect wallet",exact:true}).click();
-  await host.getByRole("button",{name:"Host a session",exact:true}).click();
+  await host.locator("header").getByRole("button",{name:"Host a session",exact:true}).click();
   await host.getByLabel("Session title",{exact:true}).fill("Isolated wallet-test workshop");
   await host.getByLabel("Minimum to form the group",{exact:true}).fill("2");
   await host.getByLabel("Booking cutoff",{exact:true}).fill(inputDate(deadline));
