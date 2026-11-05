@@ -29,7 +29,7 @@ jobs:
       - name: Prepare exact compiler artifact for launch verification
         run: |
           npm run prepare:launch -- --out reports/launch-review.json
-          npm run prepare:launch -- --write
+          npm run prepare:launch -- --check
       - run: npm run test:launch
       - run: npm test
       - run: npm run typecheck
