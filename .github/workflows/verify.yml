@@ -26,6 +26,11 @@ jobs:
           RALLY_FORK: "true"
       - run: node scripts/sync-abi.mjs --check
       - run: npm ci --no-audit --no-fund
+      - name: Prepare exact compiler artifact for launch verification
+        run: |
+          npm run prepare:launch -- --out reports/launch-review.json
+          npm run prepare:launch -- --write
+      - run: npm run test:launch
       - run: npm test
       - run: npm run typecheck
       - run: npm run build
@@ -36,7 +41,7 @@ jobs:
       - name: Configure isolated mock-token deployment
         run: node scripts/seed-test-chain.mjs
       - name: Test actual browser wallet signing and refund path
-        run: npm run test:browser -- tests/browser/wallet.spec.ts
+        run: npm run test:browser -- tests/browser/wallet.spec.ts tests/browser/launch.spec.ts
         env:
           RALLY_LOCAL_CHAIN: "true"
       - uses: actions/upload-artifact@v4

@@ -1,0 +1,13 @@
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { createPublicClient, defineChain, http } from "viem";
+import { validateReview } from "../src/launch-domain.ts";
+import { verifyDeployment } from "../src/launch-verifier.ts";
+const at = process.argv.indexOf("--hash");
+if (at < 0 || !/^0x[0-9a-f]{64}$/i.test(process.argv[at + 1] ?? "")) throw new Error("Usage: node --experimental-strip-types scripts/verify-deployment.mjs --hash 0xACTUAL_DEPLOYMENT_TRANSACTION");
+const review = validateReview(JSON.parse(await readFile(new URL("../src/launch-review.json", import.meta.url), "utf8")));
+const network = defineChain({ id: 4663, name: "Robinhood Chain", nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 }, rpcUrls: { default: { http: ["https://rpc.mainnet.chain.robinhood.com"] } } });
+const client = createPublicClient({ chain: network, transport: http(undefined, { timeout: 15_000, retryCount: 1 }) });
+const result = await verifyDeployment(client, review, process.argv[at + 1]);
+const out = new URL("../.local/mainnet-deployment-receipt.json", import.meta.url);
+await mkdir(new URL(".", out), { recursive: true }); await writeFile(out, JSON.stringify(result, null, 2) + "\n");
+console.log(JSON.stringify({ contract: result.contract, transaction: result.transactionHash, checks: result.checks, output: out.pathname }));
