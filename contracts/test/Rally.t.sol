@@ -6,6 +6,7 @@ import {Rally} from "../src/Rally.sol";
 interface Vm {
     function chainId(uint256) external;
     function warp(uint256) external;
+    function getBlockTimestamp() external view returns (uint256);
     function etch(address, bytes calldata) external;
     function prank(address) external;
     function expectRevert(bytes4) external;

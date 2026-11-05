@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+defaults:
+  run:
+    shell: bash
 jobs:
   verify:
     runs-on: ubuntu-24.04
@@ -18,11 +21,11 @@ jobs:
           version: v1.9.0
       - run: mkdir -p reports
       - run: forge test --root contracts --no-match-contract WIFForkTest -vv | tee reports/contract-tests.txt
-      - run: forge test --root contracts --match-contract WIFForkTest -vv | tee reports/real-wif-fork.txt
+      - run: forge test --root contracts --match-contract WIFForkTest -vvvv | tee reports/real-wif-fork.txt
         env:
           RALLY_FORK: "true"
       - run: node scripts/sync-abi.mjs --check
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - run: npm test
       - run: npm run typecheck
       - run: npm run build

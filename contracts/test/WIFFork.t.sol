@@ -35,8 +35,9 @@ contract WIFForkTest {
         Rally rally = new Rally();
         _localBalance(HOST, 1000 ether); _localBalance(ALICE, 1000 ether); _localBalance(BOB, 1000 ether);
         vm.prank(HOST); require(RealWIF(WIF).approve(address(rally), 10 ether));
-        Rally.Params memory p = Rally.Params(10 ether, 2, 5, uint64(block.timestamp + 1 hours),
-            uint64(block.timestamp + 2 hours), uint64(block.timestamp + 3 hours), 0, "Real-bytecode fork test, no mainnet transaction");
+        uint64 started = uint64(vm.getBlockTimestamp());
+        Rally.Params memory p = Rally.Params(10 ether, 2, 5, started + 1 hours,
+            started + 2 hours, started + 3 hours, 0, "Real-bytecode fork test, no mainnet transaction");
         vm.prank(HOST); uint64 id = rally.createRound(p);
         vm.prank(ALICE); require(RealWIF(WIF).approve(address(rally), 10 ether));
         vm.prank(ALICE); rally.reserve(id);
@@ -44,7 +45,7 @@ contract WIFForkTest {
         vm.prank(HOST); rally.claimCredit();
         require(RealWIF(WIF).balanceOf(ALICE) == 1000 ether && rally.totalLiability() == 0, "Fork refund mismatch");
 
-        p.deadline = uint64(block.timestamp + 1 hours); p.startAt = p.deadline + 1 hours; p.endAt = p.startAt + 1 hours;
+        p.deadline = uint64(vm.getBlockTimestamp() + 1 hours); p.startAt = p.deadline + 1 hours; p.endAt = p.startAt + 1 hours;
         vm.prank(HOST); require(RealWIF(WIF).approve(address(rally), 10 ether));
         vm.prank(HOST); id = rally.createRound(p);
         vm.prank(ALICE); require(RealWIF(WIF).approve(address(rally), 10 ether));
