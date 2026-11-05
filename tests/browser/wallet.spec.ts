@@ -18,7 +18,7 @@ async function walletPage(browser:Browser,address:string){
   await page.route("https://rpc.mainnet.chain.robinhood.com",async route=>{const result=await route.fetch({url:rpc});await route.fulfill({response:result});});
   await page.clock.install({time:new Date()});return page;
 }
-async function jump(page:Page,seconds:number){await call("evm_setNextBlockTimestamp",[seconds]);await call("evm_mine");await page.clock.setSystemTime(new Date(seconds*1000));await page.getByRole("button",{name:"Refresh",exact:false}).first().click().catch(()=>{});}
+async function jump(page:Page,seconds:number){await call("evm_setNextBlockTimestamp",[seconds]);await call("evm_mine");await page.clock.setSystemTime(new Date(seconds*1000));}
 async function open(page:Page,id=1){await page.goto(`/?mode=live&round=${id}`);await page.getByRole("button",{name:"Connect wallet",exact:true}).click();}
 const inputDate=(n:number)=>new Date(n*1000).toISOString().slice(0,16);
 
