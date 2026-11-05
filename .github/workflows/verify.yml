@@ -31,6 +31,14 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
+      - name: Start isolated wallet test chain
+        run: nohup anvil --host 127.0.0.1 --port 8545 --chain-id 4663 --block-time 1 > reports/anvil.log 2>&1 &
+      - name: Configure isolated mock-token deployment
+        run: node scripts/seed-test-chain.mjs
+      - name: Test actual browser wallet signing and refund path
+        run: npm run test:browser -- tests/browser/wallet.spec.ts
+        env:
+          RALLY_LOCAL_CHAIN: "true"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
