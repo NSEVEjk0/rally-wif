@@ -1,0 +1,39 @@
+name: Verify Rally
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.9.0
+      - run: mkdir -p reports
+      - run: forge test --root contracts --no-match-contract WIFForkTest -vv | tee reports/contract-tests.txt
+      - run: forge test --root contracts --match-contract WIFForkTest -vv | tee reports/real-wif-fork.txt
+        env:
+          RALLY_FORK: "true"
+      - run: node scripts/sync-abi.mjs --check
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rally-verification
+          path: |
+            package-lock.json
+            reports
+            test-results
+          retention-days: 7

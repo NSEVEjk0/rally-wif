@@ -1,0 +1,12 @@
+node_modules/
+dist/
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+.env
+.env.local
+.local/
+.vercel/
+reports/
+test-results/
+playwright-report/
