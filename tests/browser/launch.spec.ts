@@ -2,17 +2,23 @@ import { test, expect, type Browser } from "@playwright/test";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 test.skip(process.env.RALLY_LOCAL_CHAIN !== "true", "Requires the isolated mock-token chain.");
 const rpc = "http://127.0.0.1:8545";
-async function launchPage(browser: Browser, address: string, failSubmission = false) {
+async function launchPage(browser: Browser, address: string, failSubmission = false, blockStorage = false, rejectSignature = false) {
   const context = await browser.newContext();
-  await context.addInitScript(({ address, rpc, failSubmission }) => {
+  await context.addInitScript(({ address, rpc, failSubmission, blockStorage, rejectSignature }) => {
+    (window as unknown as { rallySendCalls: number }).rallySendCalls = 0;
+    if (blockStorage) Storage.prototype.setItem = () => { throw new Error("Test-only unavailable recovery storage"); };
     (window as unknown as { ethereum: unknown }).ethereum = { request: async ({ method, params = [] }: { method: string; params?: unknown[] }) => {
       if (method === "eth_requestAccounts" || method === "eth_accounts") return [address];
       if (method === "wallet_switchEthereumChain" || method === "wallet_addEthereumChain") return null;
-      if (failSubmission && method === "eth_sendTransaction") throw new Error("Test-only lost wallet transport response");
+      if (method === "eth_sendTransaction") {
+        (window as unknown as { rallySendCalls: number }).rallySendCalls++;
+        if (rejectSignature) throw Object.assign(new Error("Test-only user rejection"), { code: 4001 });
+        if (failSubmission) throw new Error("Test-only lost wallet transport response");
+      }
       const response = await fetch(rpc, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) });
       const data = await response.json(); if (data.error) throw new Error(data.error.message); return data.result;
     } };
-  }, { address, rpc, failSubmission });
+  }, { address, rpc, failSubmission, blockStorage, rejectSignature });
   const page = await context.newPage();
   await page.route("https://rpc.mainnet.chain.robinhood.com", async route => { const response = await route.fetch({ url: rpc }); await route.fulfill({ response }); });
   await page.goto("/launch.html");
@@ -56,5 +62,24 @@ test("an uncertain wallet submission remains blocked after reload", async ({ bro
   await page.reload(); await page.getByRole("button", { name: "Connect operator wallet", exact: true }).click();
   await expect(page.getByRole("button", { name: "Prepare deployment", exact: true })).toBeDisabled();
   await expect(page.getByRole("button", { name: "Deploy reviewed build", exact: true })).toBeDisabled();
+  await page.context().close();
+});
+
+test("unavailable recovery storage prevents any wallet submission", async ({ browser }) => {
+  const accounts = JSON.parse(await readFile(".local/test-accounts.json", "utf8"));
+  const page = await launchPage(browser, accounts[0], false, true);
+  await page.getByRole("button", { name: "Deploy reviewed build", exact: true }).click();
+  await expect(page.locator("#status")).toContainText("No wallet transaction was requested");
+  expect(await page.evaluate(() => (window as unknown as { rallySendCalls: number }).rallySendCalls)).toBe(0);
+  await page.context().close();
+});
+
+test("an explicitly rejected wallet signature sends no automatic retry", async ({ browser }) => {
+  const accounts = JSON.parse(await readFile(".local/test-accounts.json", "utf8"));
+  const page = await launchPage(browser, accounts[0], false, false, true);
+  await page.getByRole("button", { name: "Deploy reviewed build", exact: true }).click();
+  await expect(page.locator("#status")).toContainText("The wallet signature was rejected");
+  expect(await page.evaluate(() => (window as unknown as { rallySendCalls: number }).rallySendCalls)).toBe(1);
+  await expect(page.getByRole("button", { name: "Deploy reviewed build", exact: true })).toBeEnabled();
   await page.context().close();
 });

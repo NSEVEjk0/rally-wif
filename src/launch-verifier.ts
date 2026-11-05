@@ -20,11 +20,13 @@ export async function verifyDeployment(client: PublicClient, review: LaunchRevie
   if (latest < receipt.blockNumber + 1n) throw new Error("Wait for two confirmations before verifying the deployment.");
   const address = getAddress(receipt.contractAddress);
   if (address !== getAddress(getContractAddress({ from: transaction.from, nonce: BigInt(transaction.nonce) }))) throw new Error("The receipt contract address differs from the creating account and nonce.");
-  const [atDeployment, current, token, chain, fee, grace] = await Promise.all([
+  const [atDeployment, current, token, chain, fee, grace, canonicalBlock] = await Promise.all([
     client.getCode({ address, blockNumber: receipt.blockNumber }), client.getCode({ address }),
     client.readContract({ address, abi: constants, functionName: "WIF" }), client.readContract({ address, abi: constants, functionName: "CHAIN_ID" }),
     client.readContract({ address, abi: constants, functionName: "FEE_BPS" }), client.readContract({ address, abi: constants, functionName: "CHECKIN_GRACE" }),
+    client.getBlock({ blockNumber: receipt.blockNumber }),
   ]);
+  if (canonicalBlock.hash !== receipt.blockHash) throw new Error("The deployment receipt is no longer in the canonical block. Check it again after confirmation.");
   if (!atDeployment || !current || keccak256(atDeployment) !== review.runtimeCodeHash || keccak256(current) !== review.runtimeCodeHash) throw new Error("The deployed runtime differs from the pinned compiler artifact.");
   if (getAddress(token) !== getAddress(WIF) || chain !== BigInt(CHAIN_ID) || fee !== 100n || grace !== 900n) throw new Error("The deployed contract constants do not match Rally's fixed terms.");
   const spent = receipt.gasUsed * receipt.effectiveGasPrice;
@@ -39,7 +41,7 @@ export async function verifyDeployment(client: PublicClient, review: LaunchRevie
     schema: "rally-deployment-receipt-v1", chainId: CHAIN_ID, transactionHash: hash, contract: address, deployer: transaction.from,
     deploymentBlockHash: receipt.blockHash, gasUsed: String(receipt.gasUsed), effectiveGasPrice: String(receipt.effectiveGasPrice), actualGasSpendWei: String(spent),
     sourceSHA256: review.sourceSHA256, creationCodeHash: review.creationCodeHash, runtimeCodeHash: review.runtimeCodeHash, compiler: review.compiler,
-    checks: ["chain 4663", "successful zero-value creation", "exact creation bytecode", "two confirmations", "runtime at deployment and latest", "fixed token and contract constants", ...(plan ? ["exact wallet gas bound"] : [])],
+    checks: ["chain 4663", "successful zero-value creation", "exact creation bytecode", "two confirmations", "canonical deployment block", "runtime at deployment and latest", "fixed token and contract constants", ...(plan ? ["exact wallet gas bound"] : [])],
     manifest: { chainId: CHAIN_ID, token: WIF, contract: address, runtimeCodeHash: review.runtimeCodeHash, deployBlock: block, transactionHash: hash, compiler: "0.8.30", optimizerRuns: 200, feeBps: 100, checkInGraceSeconds: 900 },
   };
 }

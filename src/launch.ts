@@ -11,6 +11,7 @@ const client = createPublicClient({ chain: network, transport: http(undefined, {
 const pendingKey = "rally-launch-pending-v1";
 let review: LaunchReview | undefined, owner: Address | undefined, plan: GasPlan | undefined;
 let pending: { hash: Hash; plan: GasPlan } | undefined;
+let uncertainPlan: GasPlan | undefined;
 let result: Awaited<ReturnType<typeof verifyDeployment>> | undefined, busy = false, uncertainSubmission = false;
 function provider() {
   const p = (window as Window & { ethereum?: EIP1193Provider }).ethereum;
@@ -73,7 +74,8 @@ element("prepare").onclick = () => action(async () => {
 
 async function inspect(hash: Hash) {
   if (!review) throw new Error("The reviewed build is not available.");
-  result = await verifyDeployment(client, review, hash, pending?.hash.toLowerCase() === hash.toLowerCase() ? pending.plan : undefined);
+  const expected = pending?.hash.toLowerCase() === hash.toLowerCase() ? pending.plan : uncertainSubmission ? uncertainPlan : undefined;
+  result = await verifyDeployment(client, review, hash, expected);
   element("receipt").hidden = false;
   element("receipt").textContent = `Verified deployment receipt\nContract: ${result.contract}\nTransaction: ${result.transactionHash}\nGas paid: ${formatEther(BigInt(result.actualGasSpendWei))} ETH\nChecks: ${result.checks.join(" · ")}\nExport this candidate, independently verify it, then commit its manifest.`;
   status("Receipt verified against the pinned build. The public app manifest has not been changed.");
@@ -87,17 +89,26 @@ element("deploy").onclick = () => action(async () => {
   // Persist an uncertain state before invoking the wallet. A lost response or
   // closed tab must not enable a second deployment with another account nonce.
   uncertainSubmission = true;
-  try { localStorage.setItem(pendingKey, JSON.stringify({ uncertain: true, plan })); } catch { /* This tab still blocks duplicate submission. */ }
+  uncertainPlan = plan;
+  try {
+    const saved = JSON.stringify({ uncertain: true, plan });
+    localStorage.setItem(pendingKey, saved);
+    if (localStorage.getItem(pendingKey) !== saved) throw new Error("Recovery record was not saved.");
+  } catch {
+    uncertainSubmission = false; uncertainPlan = undefined;
+    throw new Error("Browser recovery storage is unavailable. No wallet transaction was requested. Enable persistent local storage before deploying.");
+  }
   let hash: Hash;
   try {
     hash = await wallet.sendTransaction({ account: owner, chain: network, data: review.creationBytecode, value: 0n, nonce: plan.nonce, gas: BigInt(plan.gas), maxFeePerGas: BigInt(plan.maxFeePerGas), maxPriorityFeePerGas: BigInt(plan.maxPriorityFeePerGas) });
   } catch (error) {
     const rejected = (error as { code?: number }).code === 4001 || (error as { cause?: { code?: number } }).cause?.code === 4001 || (error as { name?: string }).name === "UserRejectedRequestError";
-    if (rejected) { uncertainSubmission = false; try { localStorage.removeItem(pendingKey); } catch { /* User rejection is explicit in this tab. */ } throw new Error("The wallet signature was rejected. No retry was sent."); }
+    if (rejected) { uncertainSubmission = false; uncertainPlan = undefined; try { localStorage.removeItem(pendingKey); } catch { /* User rejection is explicit in this tab. */ } throw new Error("The wallet signature was rejected. No retry was sent."); }
     throw new Error("The wallet submission response was lost or unsuccessful. Check the wallet's transaction history and paste any deployment hash below. Another deployment is blocked; no retry was sent.");
   }
   pending = { hash, plan };
   uncertainSubmission = false;
+  uncertainPlan = undefined;
   try { localStorage.setItem(pendingKey, JSON.stringify(pending)); } catch { /* The visible hash still supports read-only recovery. */ }
   element<HTMLInputElement>("transaction").value = hash;
   status(`Transaction sent: ${hash}. Waiting for two confirmations. Keep this hash for recovery; do not repeat the deployment.`);
@@ -122,7 +133,7 @@ try {
 } catch (error) { element("build-status").textContent = "Artifact review pending"; status((error as Error).message, true); }
 try {
   const saved = JSON.parse(localStorage.getItem(pendingKey) ?? "null");
-  if (saved?.uncertain) { uncertainSubmission = true; status("A previous wallet submission has an uncertain outcome. Look up its hash in the wallet and verify the receipt. Another deployment is blocked."); }
+  if (saved?.uncertain) { uncertainSubmission = true; uncertainPlan = saved.plan; status("A previous wallet submission has an uncertain outcome. Look up its hash in the wallet and verify the receipt. Another deployment is blocked."); }
   else if (saved && /^0x[0-9a-f]{64}$/i.test(saved.hash) && saved.plan) { pending = saved; element<HTMLInputElement>("transaction").value = saved.hash; status("A deployment hash was saved. Verify its receipt instead of sending another transaction."); }
 } catch { /* Invalid browser data is not authority to send a transaction. */ }
 const p = (window as Window & { ethereum?: EIP1193Provider & { on?: (event: string, listener: () => void) => void } }).ethereum;

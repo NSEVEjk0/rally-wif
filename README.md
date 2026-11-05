@@ -8,6 +8,8 @@ After the session’s end time and recorded host check-in, anyone can settle it;
 
 ## Try the product
 
+Open [Rally](https://rally-wif.vercel.app).
+
 The public preview labels every example as fictional. Explore a reservation, release it before cutoff, or advance the example clock to see an underfilled or missed-check-in refund. The calendar export and repeat-session draft work in the browser. No example action transfers WIF or claims a blockchain receipt.
 
 Live mode uses the official **WIF on Robinhood Chain, chain ID 4663**. A deployed, code-matched contract and funded wallet are required. The committed deployment manifest currently records that mainnet deployment is pending; the app never substitutes examples for live transactions.
@@ -59,5 +61,7 @@ The workflow runs the contract tests, two 200-case fuzz campaigns, a real-WIF-by
 The browser accepts the contract only from the committed `src/deployment.json`, checks its runtime hash before allowances, and requests an exact allowance for the price or bond. No arbitrary contract or token is accepted through the URL. Live transaction results link to actual receipts.
 
 Mainnet deployment requires the reviewed artifact and a bounded, funded operator wallet. After deployment, commit the address, runtime hash, deployment block and actual transaction hash; verify the deployed code and execute real WIF booking/refund/completion transactions before treating this as a complete event entry.
+
+The separate [operator launch guide](MAINNET.md) explains `/launch.html`, the exact pinned compiler build, a zero-value creation transaction with an explicit gas cap, uncertain-submission recovery, and independent receipt verification. The operator page never changes the public deployment manifest itself.
 
 MIT. Built for the World Is Flat community during the hackathon.
