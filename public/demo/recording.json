@@ -1,0 +1,52 @@
+{
+  "schema": "rally-recording-v1",
+  "origin": "https://rally-wif.vercel.app",
+  "disclosure": "Controlled-wallet mainnet demo · No independent customers or workshop attendance claimed",
+  "sourceCommit": "a637dc2e7cd9422b407e2aded86c582d83edc740",
+  "recordedAt": "2026-11-06T10:22:55.232Z",
+  "video": "/demo/rally-mainnet.mp4",
+  "durationSeconds": 52.13,
+  "sha256": "1adc02b2c252bc48b7ce52872006f776d6b9b76b6bfd36963157101900039a33",
+  "editedIdleWaiting": true,
+  "transactionsSent": 0,
+  "mockedResponses": 0,
+  "verifiedRuntimeCodeHash": "0xac83475b33f3cdf3f0981551f5741304b43f16d6d3eb997677025257f0175a18",
+  "verifiedReceipts": [
+    {
+      "label": "reserve1",
+      "hash": "0x750c6babd52ac3431cae4d8228a383ca66a586f5d22b273e4e8a0ca746c4aa2c",
+      "block": "107485848",
+      "from": "0xb0a61ddcf60b221228c713295fa074d52f303492",
+      "to": "0x71c615c6fa167a0843dad6ed715b8736b7f507da",
+      "function": "reserve(1)",
+      "event": "SeatReserved",
+      "amountWIF": "0.01"
+    },
+    {
+      "label": "refund1",
+      "hash": "0x164344eac52c3579f3957906254aa60e753b19fdc3c51e900fa2480ed6605ed4",
+      "block": "107490798",
+      "from": "0xb0a61ddcf60b221228c713295fa074d52f303492",
+      "to": "0x71c615c6fa167a0843dad6ed715b8736b7f507da",
+      "function": "refund(1)",
+      "event": "Refunded",
+      "amountWIF": "0.01"
+    },
+    {
+      "label": "reserve2",
+      "hash": "0xc7b8811580d36085eb4d3cd4f673048218232b3d215e4a9a026c7c1a53bb006a",
+      "block": "107491052",
+      "from": "0xb0a61ddcf60b221228c713295fa074d52f303492",
+      "to": "0x71c615c6fa167a0843dad6ed715b8736b7f507da",
+      "function": "reserve(2)",
+      "event": "SeatReserved",
+      "amountWIF": "0.01"
+    }
+  ],
+  "accounting": {
+    "contractWIF": "0",
+    "totalLiabilityWIF": "0",
+    "hostCreditWIF": "0",
+    "participantCreditWIF": "0"
+  }
+}

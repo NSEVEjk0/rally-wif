@@ -1,0 +1,295 @@
+{
+  "schema": "rally-mainnet-demo-v1",
+  "disclosure": "Controlled protocol demo wallets. No independent customers or actual workshop attendance are claimed.",
+  "chainId": 4663,
+  "token": "0x5173b8eA6923c2d40267890D45C46a3480954773",
+  "contract": "0x71C615c6Fa167a0843DaD6Ed715B8736b7f507DA",
+  "app": "https://rally-wif.vercel.app",
+  "sourceCommit": "a637dc2e7cd9422b407e2aded86c582d83edc740",
+  "controlledWallets": {
+    "host": "0x90d0E7CDb634C823EAa22723Ff602CbC65B8A479",
+    "participant": "0xb0a61dDcf60B221228c713295fa074D52F303492"
+  },
+  "priceWIF": "0.01",
+  "actualDemoGasETH": "0.00002846110128",
+  "cumulativeWIFOutflow": "0.06",
+  "verifiedAt": "2026-11-06T10:09:59.207Z",
+  "rounds": [
+    {
+      "id": "1",
+      "title": "Feedback circle · demo",
+      "outcome": "underfilled",
+      "reservation": "0x750c6babd52ac3431cae4d8228a383ca66a586f5d22b273e4e8a0ca746c4aa2c",
+      "fullRefund": "0x164344eac52c3579f3957906254aa60e753b19fdc3c51e900fa2480ed6605ed4",
+      "refundedWIF": "0.01",
+      "hostBondClaim": "0x9405892a5047efb182e1f813c9db73406146bf2a22be004a2e9784b1dad0cdd8"
+    },
+    {
+      "id": "2",
+      "title": "Feedback circle repeat · demo",
+      "parentRound": "1",
+      "outcome": "cancelled after the participant left before cutoff",
+      "reservation": "0xc7b8811580d36085eb4d3cd4f673048218232b3d215e4a9a026c7c1a53bb006a",
+      "fullEarlyRefund": "0x058bfe32cc34b31d6a4009fd805685319626dc283efd3e1d346c31decbe7fd21",
+      "hostBondClaim": "0x225008d39678eee594a3e257d66019cde338b015992b6a542f737122a5ce3539"
+    }
+  ],
+  "accounting": {
+    "contractWIF": "0",
+    "totalLiabilityWIF": "0",
+    "hostCreditWIF": "0",
+    "participantCreditWIF": "0",
+    "participantWIF": "0.02",
+    "hostETH": "0.000002756823076",
+    "participantETH": "0.000002591014524"
+  },
+  "transactions": [
+    {
+      "label": "fund_wif",
+      "transactionHash": "0x6b8e294b2f43055681f3ba274cff94754e5ec114385f4f20cbe899614bd8cfee",
+      "blockNumber": "107485567",
+      "blockHash": "0x703e178ca513de13d9837985ee2d26ba17806a831d738d0ddd49fef9ffe0e327",
+      "gasUsed": "51352",
+      "effectiveGasPrice": "20404000",
+      "actualGasSpendWei": "1047786208000",
+      "events": []
+    },
+    {
+      "label": "fund_gas",
+      "transactionHash": "0x718eb2ee201081bd8a3fb5d47510e8563ebee6d0ecd5b8d1d10e524c2ba1a3f7",
+      "blockNumber": "107485629",
+      "blockHash": "0x2fb9265f95d02e71ff71176ec272bc8db61075280134657518e54776e5161c2d",
+      "gasUsed": "21000",
+      "effectiveGasPrice": "20022000",
+      "actualGasSpendWei": "420462000000",
+      "events": []
+    },
+    {
+      "label": "approve_host1",
+      "transactionHash": "0x27627f061871990ff87ac87cc2d420f96699b5d5feeecc6544b24190214e85eb",
+      "blockNumber": "107485689",
+      "blockHash": "0x8368c324f3b8ee4ca32b669c88a27633d6c0fa7444c16c00602eef708ce1aa8d",
+      "gasUsed": "45937",
+      "effectiveGasPrice": "20014000",
+      "actualGasSpendWei": "919383118000",
+      "events": []
+    },
+    {
+      "label": "create1",
+      "transactionHash": "0x40c2a2841e1872a9ae5f9dd7785239878a76305e6ef77215745b5f211022ed6c",
+      "blockNumber": "107485751",
+      "blockHash": "0xdd887a2b48cfc8f54670e763b28cda5173a68a0d97880bcd256e3937ac84e236",
+      "gasUsed": "343384",
+      "effectiveGasPrice": "20074000",
+      "actualGasSpendWei": "6893090416000",
+      "events": [
+        {
+          "eventName": "RoundCreated",
+          "args": {
+            "id": "1",
+            "creator": "0x90d0E7CDb634C823EAa22723Ff602CbC65B8A479",
+            "parentRound": "0",
+            "termsHash": "0x3689848054de54ce22ca152ddc5e24d25d3d8e10bae672b2281a2ed53c6cb139",
+            "bond": "10000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "label": "approve_participant1",
+      "transactionHash": "0x67d5910820f38857f93fe4f45360cd3ceb544f612da6aff45524ed293af069c5",
+      "blockNumber": "107485810",
+      "blockHash": "0x6fce70ddc97d3c6ae2b1760f913efbde3d0ea567f9f727d8c61fdf35b926c575",
+      "gasUsed": "45937",
+      "effectiveGasPrice": "20022000",
+      "actualGasSpendWei": "919750614000",
+      "events": []
+    },
+    {
+      "label": "reserve1",
+      "transactionHash": "0x750c6babd52ac3431cae4d8228a383ca66a586f5d22b273e4e8a0ca746c4aa2c",
+      "blockNumber": "107485848",
+      "blockHash": "0x22e3dd3d5e40d3897e71eb754366b39535e9c4aaf3844a94446ca5decec1f9ee",
+      "gasUsed": "84905",
+      "effectiveGasPrice": "20008000",
+      "actualGasSpendWei": "1698779240000",
+      "events": [
+        {
+          "eventName": "SeatReserved",
+          "args": {
+            "id": "1",
+            "participant": "0xb0a61dDcf60B221228c713295fa074D52F303492",
+            "seats": 1,
+            "paid": "10000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "label": "refund1",
+      "transactionHash": "0x164344eac52c3579f3957906254aa60e753b19fdc3c51e900fa2480ed6605ed4",
+      "blockNumber": "107490798",
+      "blockHash": "0x1c9163d8274e776ed89fd1db1d372bd2accc93aca5e879c08b57d14331638b9e",
+      "gasUsed": "94833",
+      "effectiveGasPrice": "20106000",
+      "actualGasSpendWei": "1906712298000",
+      "events": [
+        {
+          "eventName": "RoundUnderfilled",
+          "args": {
+            "id": "1",
+            "seats": 1
+          }
+        },
+        {
+          "eventName": "Refunded",
+          "args": {
+            "id": "1",
+            "participant": "0xb0a61dDcf60B221228c713295fa074D52F303492",
+            "amount": "10000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "label": "claim1",
+      "transactionHash": "0x9405892a5047efb182e1f813c9db73406146bf2a22be004a2e9784b1dad0cdd8",
+      "blockNumber": "107490834",
+      "blockHash": "0x5b82aea82f7c29cd3a102a233db447600ddbb237f1d416b22cbdafc5347451fc",
+      "gasUsed": "44858",
+      "effectiveGasPrice": "20070000",
+      "actualGasSpendWei": "900300060000",
+      "events": [
+        {
+          "eventName": "CreditClaimed",
+          "args": {
+            "creator": "0x90d0E7CDb634C823EAa22723Ff602CbC65B8A479",
+            "amount": "10000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "label": "approve_host2",
+      "transactionHash": "0xacf470c674ad10626a20151db139c8af31688a93b8c838a9d325431f8f60ee23",
+      "blockNumber": "107490874",
+      "blockHash": "0x80d2f1194bf76bfcf9254b452f5127ab367c08708f487232b918947a4c4d871e",
+      "gasUsed": "45937",
+      "effectiveGasPrice": "20084000",
+      "actualGasSpendWei": "922598708000",
+      "events": []
+    },
+    {
+      "label": "create2",
+      "transactionHash": "0xd6c115c7f712f62504cab47dce7d5979ee969e058eb4b28a4134a77e630aa9ff",
+      "blockNumber": "107490933",
+      "blockHash": "0xb0ab5f757b80ff965fd6d2e13086b2eb980647263dd8e5e8673d12a0f66d569e",
+      "gasUsed": "328836",
+      "effectiveGasPrice": "20482000",
+      "actualGasSpendWei": "6735218952000",
+      "events": [
+        {
+          "eventName": "RoundCreated",
+          "args": {
+            "id": "2",
+            "creator": "0x90d0E7CDb634C823EAa22723Ff602CbC65B8A479",
+            "parentRound": "1",
+            "termsHash": "0x66dea47d3801cfe20c89f5139715f9927bb1ea45792ea5d6891a2b4f06506d9a",
+            "bond": "10000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "label": "approve_participant2",
+      "transactionHash": "0xbbb88ec062bfe0ad5ab6496124d8b37422fd449f0cd32a800e6537c96c6d548d",
+      "blockNumber": "107490992",
+      "blockHash": "0xf1a36bc58691c22f23b2089dcdf5c0de6786f0430ee2284552998c7c4ca54d1c",
+      "gasUsed": "45937",
+      "effectiveGasPrice": "20154000",
+      "actualGasSpendWei": "925814298000",
+      "events": []
+    },
+    {
+      "label": "reserve2",
+      "transactionHash": "0xc7b8811580d36085eb4d3cd4f673048218232b3d215e4a9a026c7c1a53bb006a",
+      "blockNumber": "107491052",
+      "blockHash": "0x9d1399360f6a6e57e37ee19151d519aed204ad2e78654f17e2546b9e98c45198",
+      "gasUsed": "84905",
+      "effectiveGasPrice": "20208000",
+      "actualGasSpendWei": "1715760240000",
+      "events": [
+        {
+          "eventName": "SeatReserved",
+          "args": {
+            "id": "2",
+            "participant": "0xb0a61dDcf60B221228c713295fa074D52F303492",
+            "seats": 1,
+            "paid": "10000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "label": "leave2",
+      "transactionHash": "0x058bfe32cc34b31d6a4009fd805685319626dc283efd3e1d346c31decbe7fd21",
+      "blockNumber": "107491114",
+      "blockHash": "0xfb011e79ed1c92b02ddde957d89826deaeccfd57039ab6bba6189c67e7760ba1",
+      "gasUsed": "61781",
+      "effectiveGasPrice": "20106000",
+      "actualGasSpendWei": "1242168786000",
+      "events": [
+        {
+          "eventName": "SeatReleased",
+          "args": {
+            "id": "2",
+            "participant": "0xb0a61dDcf60B221228c713295fa074D52F303492",
+            "seats": 0
+          }
+        }
+      ]
+    },
+    {
+      "label": "cancel2",
+      "transactionHash": "0x5dacd314112c42441968824d776a31001d4e970a4f3649e58d8d03330405f4d8",
+      "blockNumber": "107491160",
+      "blockHash": "0xc2607ee7eac167d94bb59e8286279cfcb3cebeb9c354f6c5a90994c1340d154b",
+      "gasUsed": "65587",
+      "effectiveGasPrice": "20038000",
+      "actualGasSpendWei": "1314232306000",
+      "events": [
+        {
+          "eventName": "RoundCancelled",
+          "args": {
+            "id": "2",
+            "bondForfeited": false,
+            "bonusPerSeat": "0"
+          }
+        }
+      ]
+    },
+    {
+      "label": "claim2",
+      "transactionHash": "0x225008d39678eee594a3e257d66019cde338b015992b6a542f737122a5ce3539",
+      "blockNumber": "107491223",
+      "blockHash": "0x450002e9377285724e59004f5931d42220b9b5e2a21b527db9e4eceb034e6df4",
+      "gasUsed": "44858",
+      "effectiveGasPrice": "20042000",
+      "actualGasSpendWei": "899044036000",
+      "events": [
+        {
+          "eventName": "CreditClaimed",
+          "args": {
+            "creator": "0x90d0E7CDb634C823EAa22723Ff602CbC65B8A479",
+            "amount": "10000000000000000"
+          }
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Technical demo with controlled wallets; customer demand and physical attendance are not established.",
+    "This mainnet run verifies underfilled refunds, repeat reservations and early exit/cancellation. Completion and missed-check-in paths passed contract and real-WIF fork tests.",
+    "All recorded transactions passed two-confirmation, canonical-block, exact calldata and bounded gas verification."
+  ]
+}

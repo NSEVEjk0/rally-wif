@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --experimental-strip-types tests/domain.test.mjs",
     "test:browser": "playwright test",
+    "test:browser-live": "node scripts/verify-live-demo.mjs",
     "sync:abi": "node scripts/sync-abi.mjs",
     "prepare:launch": "node --experimental-strip-types scripts/prepare-launch.mjs",
     "verify:deployment": "node --experimental-strip-types scripts/verify-deployment.mjs",
