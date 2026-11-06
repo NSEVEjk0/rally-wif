@@ -10,7 +10,7 @@ The useful distinction is recurring community coordination with specified onchai
 
 - [Public repository](https://github.com/NSEVEjk0/rally-wif) and [app](https://rally-wif.vercel.app).
 - Reviewed, code-matched deployment on **Robinhood Chain, chain ID 4663**, using the official WIF token.
-- Genuine settled WIF transactions and real agreed community activity. The current committed mainnet manifest is empty; examples and fork tests do not count as real activity.
+- Genuine settled WIF transactions and real agreed community activity. The mainnet contract is deployed and its creation receipt is verified in `src/deployment.json`; actual reservation/refund/completion/repeat transactions remain necessary. Examples and fork tests do not count as real activity.
 - Required demo video showing the actual product and transactions.
 - Human entry by **12 November 2026, 17:30 UTC**; keep the submitted app working through **16 November, 17:30 UTC**.
 

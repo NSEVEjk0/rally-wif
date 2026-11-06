@@ -1,5 +1,6 @@
 import {test,expect} from "@playwright/test";
-import {mkdir} from "node:fs/promises";
+import {mkdir,readFile} from "node:fs/promises";
+import {toFunctionSelector} from "viem";
 
 test("reservation, direct refund, calendar and repeat stay explicitly fictional",async({page})=>{
   const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
@@ -39,7 +40,32 @@ test("missed check-in exposes reservation plus the correct bond share",async({pa
   await expect(page.getByText(/Preview balance: 103 WIF/)).toBeVisible();
 });
 
-test("desktop and mobile show real terms and make pending live access explicit",async({page})=>{
+test("desktop and mobile show fixed terms and an empty configured live contract without fictional sessions",async({page})=>{
+  // Disclosed read-only RPC fixture. This test never submits a mainnet transaction.
+  const deployment=JSON.parse(await readFile("src/deployment.json","utf8"));
+  const review=JSON.parse(await readFile("src/launch-review.json","utf8"));
+  expect(deployment.contract).toBeTruthy();
+  const reads:string[]=[];
+  await page.route(/^https:\/\/rpc\.mainnet\.chain\.robinhood\.com\/?$/,async route=>{
+    const body=route.request().postDataJSON();
+    const reply=(request:{id:number;method:string;params:unknown[]})=>{
+      reads.push(request.method);
+      let result:string;
+      if(request.method==="eth_chainId")result="0x1237";
+      else if(request.method==="eth_getCode"){
+        expect(String(request.params[0]).toLowerCase()).toBe(deployment.contract.toLowerCase());
+        result=review.runtimeBytecode;
+      }else{
+        expect(request.method).toBe("eth_call");
+        const call=request.params[0] as {to:string;data:string};
+        expect(call.to.toLowerCase()).toBe(deployment.contract.toLowerCase());
+        expect(call.data).toBe(toFunctionSelector("nextRoundId()"));
+        result="0x"+"1".padStart(64,"0");
+      }
+      return {jsonrpc:"2.0",id:request.id,result};
+    };
+    await route.fulfill({json:Array.isArray(body)?body.map(reply):reply(body),headers:{"access-control-allow-origin":"*"}});
+  });
   await mkdir("reports",{recursive:true});
   await page.goto("/");
   await expect(page.getByRole("heading",{name:"Make a plan. Make it happen."})).toBeVisible();
@@ -48,7 +74,11 @@ test("desktop and mobile show real terms and make pending live access explicit",
   await page.screenshot({path:"reports/rally-mobile.png",fullPage:true});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
   await page.getByRole("button",{name:"Live sessions",exact:true}).click();
-  await expect(page.getByRole("heading",{name:"The live booking contract is next."})).toBeVisible();
+  await expect(page.getByRole("heading",{name:"Be the first to bring your group together."})).toBeVisible();
+  await expect(page.getByText("No matching sessions are listed yet. Publish the first one with your community.")).toBeVisible();
+  await expect(page.locator(".session-card")).toHaveCount(0);
+  expect(reads).toContain("eth_getCode");
+  expect(reads).toContain("eth_call");
   await page.getByRole("button",{name:"Connect wallet",exact:true}).click();
   await expect(page.getByRole("alert")).toContainText("wallet browser");
 });

@@ -16,7 +16,9 @@ Open [Rally](https://rally-wif.vercel.app).
 
 The public preview labels every example as fictional. Explore a reservation, release it before cutoff, or advance the example clock to see an underfilled or missed-check-in refund. The calendar export and repeat-session draft work in the browser. No example action transfers WIF or claims a blockchain receipt.
 
-Live mode uses the official **WIF on Robinhood Chain, chain ID 4663**. A deployed, code-matched contract and funded wallet are required. The committed deployment manifest currently records that mainnet deployment is pending; the app never substitutes examples for live transactions.
+Live mode uses the official **WIF on Robinhood Chain, chain ID 4663**. The committed manifest points to the verified contract [`0x71C615c6Fa167a0843DaD6Ed715B8736b7f507DA`](https://robinhoodchain.blockscout.com/address/0x71C615c6Fa167a0843DaD6Ed715B8736b7f507DA). The [deployment transaction](https://robinhoodchain.blockscout.com/tx/0xdeff5833c88d64708b9b2f24710b37076e0304c6276520750bb9a9b233aa1ce9) was confirmed in block **107437646**, with matching creation/runtime bytecode, fixed token/contract constants and a gas cost of **0.00004619106112 ETH**. Genuine community booking/refund/repeat activity remains to be demonstrated; examples never substitute for live transactions.
+
+WIF pays for reservations and backs the host's bond. For example, a 0.01 WIF price with a minimum of two participants requires a 0.01 WIF host bond. If only one participant joins, that participant can recover their 0.01 WIF and the host can recover the bond. If the session completes, the host can claim booking revenue less the 1% fee, plus the returned bond. Repeating a session creates fresh WIF commitments with new dates and terms. ETH pays transaction gas.
 
 ## Why a community would use it
 
@@ -64,7 +66,7 @@ The workflow runs the contract tests, two 200-case fuzz campaigns, a real-WIF-by
 
 The browser accepts the contract only from the committed `src/deployment.json`, checks its runtime hash before allowances, and requests an exact allowance for the price or bond. No arbitrary contract or token is accepted through the URL. Live transaction results link to actual receipts.
 
-Mainnet deployment requires the reviewed artifact and a bounded, funded operator wallet. After deployment, commit the address, runtime hash, deployment block and actual transaction hash; verify the deployed code and execute real WIF booking/refund/completion transactions before treating this as a complete event entry.
+The mainnet address, runtime hash, deployment block and actual transaction hash are recorded in `src/deployment.json`. Deployment verification passed two confirmations, the canonical block, exact creation/runtime bytecode, fixed constants and the exact wallet gas bound. Execute real WIF booking/refund/completion transactions before treating this as a complete event entry.
 
 The separate [operator launch guide](MAINNET.md) explains `/launch.html`, the exact pinned compiler build, a zero-value creation transaction with an explicit gas cap, uncertain-submission recovery, and independent receipt verification. The operator page never changes the public deployment manifest itself.
 

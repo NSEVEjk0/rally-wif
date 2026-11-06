@@ -1,6 +1,6 @@
 # Launch Rally with real WIF
 
-The public app is at [rally-wif.vercel.app](https://rally-wif.vercel.app). Examples are fictional. The committed mainnet deployment manifest is still empty; no mainnet contract or WIF usage has been fabricated.
+The public app is at [rally-wif.vercel.app](https://rally-wif.vercel.app). Examples are fictional. The committed mainnet manifest now records [`0x71C615c6Fa167a0843DaD6Ed715B8736b7f507DA`](https://robinhoodchain.blockscout.com/address/0x71C615c6Fa167a0843DaD6Ed715B8736b7f507DA), deployed in [transaction `0xdeff5833…aa1ce9`](https://robinhoodchain.blockscout.com/tx/0xdeff5833c88d64708b9b2f24710b37076e0304c6276520750bb9a9b233aa1ce9), block 107437646. Exact creation/runtime code, canonical inclusion, constants and the 0.00007 ETH gas cap passed verification; actual gas cost was 0.00004619106112 ETH. No WIF was transferred by deployment. Genuine booking/refund/repeat activity remains necessary. Use the recorded deployment for the community demonstration; the deployment instructions below explain reproduction for an explicitly chosen new deployment.
 
 ## Review the build
 
