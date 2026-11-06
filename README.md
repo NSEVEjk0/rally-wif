@@ -2,39 +2,39 @@
 
 **Book small events with WIF and clear refund rules.**
 
-Rally helps the WIF community run workshops, feedback circles and meetups with clear commitments. A host publishes a session with fixed terms and a WIF bond. Participants reserve with WIF. If the group falls short, participants can claim their full reservation directly from the contract. If a confirmed session is cancelled or the host misses the onchain check-in window, the host bond is divided among reservations.
+Rally lets you book a place in a workshop, meetup or feedback session using WIF, a cryptocurrency token. The host sets the price, dates and number of bookings needed. If there are too few bookings by the deadline, you can claim your full payment back without the host's approval.
 
-After the session’s end time and recorded host check-in, anyone can settle it; the host can claim revenue and their bond. A host can turn a previous session into a fresh draft for the next one.
+The host pays a WIF deposit before bookings open. If the host cancels a confirmed event or does not check in on time, booked participants get their payment back plus a share of that deposit. After the host checks in and the event's end time passes, the host can withdraw booking payments and the deposit. To run another event, the host can copy the previous one and choose new dates.
 
 ## Problem and solution
 
-Community organizers collect tentative replies, then find out too late that a session will not fill. Rally gives a small group fixed booking terms, a minimum threshold and refundable WIF reservations. The host backs specified cancellation and check-in commitments with a bond, and participants keep a direct contract refund route.
+Organisers often collect "maybe" replies and only find out later that too few places are booked. Rally helps small groups fix booking terms before anyone pays: the price, dates, minimum number of bookings and refund rules. The host puts down a WIF deposit, and each participant pays for a place. If there are too few bookings by the deadline, participants can claim a full refund.
 
 ## Try the product
 
 Open [Rally](https://rally-wif.vercel.app).
 
-Watch the [52-second narrated mainnet demonstration](https://rally-wif.vercel.app/demo/), with the controlled-wallet disclosure and links to every settled transaction.
+Watch the [52-second narrated booking and refund demo](https://rally-wif.vercel.app/demo/).
 
-The public preview labels every example as fictional. Explore a reservation, release it before cutoff, or advance the example clock to see an underfilled or missed-check-in refund. The calendar export and repeat-session draft work in the browser. No example action transfers WIF or claims a blockchain receipt.
+Choose **Sample events** to practice booking and claiming a refund. Book a sample place, cancel before the booking deadline, or move the sample clock forward to see what happens when there are too few bookings or the host does not check in. You can add an event to your calendar and copy it for next time. These are fictional events; no wallet or real payment is needed.
+
+## Live demo receipts
 
 Live mode uses the official **WIF on Robinhood Chain, chain ID 4663**. The committed manifest points to the verified contract [`0x71C615c6Fa167a0843DaD6Ed715B8736b7f507DA`](https://robinhoodchain.blockscout.com/address/0x71C615c6Fa167a0843DaD6Ed715B8736b7f507DA). The [deployment transaction](https://robinhoodchain.blockscout.com/tx/0xdeff5833c88d64708b9b2f24710b37076e0304c6276520750bb9a9b233aa1ce9) was confirmed in block **107437646**, with matching creation/runtime bytecode, fixed token/contract constants and a gas cost of **0.00004619106112 ETH**.
 
-The **controlled-wallet mainnet demonstration is complete**. [Round 1](https://rally-wif.vercel.app/?mode=live&round=1) recorded a [0.01 WIF reservation](https://robinhoodchain.blockscout.com/tx/0x750c6babd52ac3431cae4d8228a383ca66a586f5d22b273e4e8a0ca746c4aa2c) and a [full underfilled refund](https://robinhoodchain.blockscout.com/tx/0x164344eac52c3579f3957906254aa60e753b19fdc3c51e900fa2480ed6605ed4) after the genuine chain-time cutoff. [Round 2](https://rally-wif.vercel.app/?mode=live&round=2) links to round 1 and recorded a [fresh reservation](https://robinhoodchain.blockscout.com/tx/0xc7b8811580d36085eb4d3cd4f673048218232b3d215e4a9a026c7c1a53bb006a), early exit and cancellation. Both host bonds were claimed back. The [public evidence](docs/mainnet-demo.json) records all 15 receipts and zero remaining contract balance/liability or wallet credits. Demo gas cost: **0.00002846110128 ETH**.
+The demo used team wallets. For the [first event](https://rally-wif.vercel.app/?mode=live&round=1), a participant [booked a place for 0.01 WIF](https://robinhoodchain.blockscout.com/tx/0x750c6babd52ac3431cae4d8228a383ca66a586f5d22b273e4e8a0ca746c4aa2c). There were too few bookings by the deadline, so the participant [claimed the full payment back](https://robinhoodchain.blockscout.com/tx/0x164344eac52c3579f3957906254aa60e753b19fdc3c51e900fa2480ed6605ed4). The host copied the event with new dates, and the participant [booked again](https://robinhoodchain.blockscout.com/tx/0xc7b8811580d36085eb4d3cd4f673048218232b3d215e4a9a026c7c1a53bb006a). The participant cancelled before the deadline and got a full refund; the host cancelled the event and withdrew the deposit. Both host deposits were returned. The [transaction records](docs/mainnet-demo.json) contain all 15 receipts. All payments and deposits were refunded or withdrawn, leaving a zero contract balance and no amounts owed. Network fees for the demo totalled **0.00002846110128 ETH**.
 
-The host and participant wallets were controlled for this technical demonstration. No independent customers, workshop attendance or completed community event are claimed. Completion and missed-check-in paths passed contract and real-WIF fork tests; this mainnet run exercised underfilled refunds, repeat reservations and early exit/cancellation.
-
-WIF pays for reservations and backs the host's bond. For example, a 0.01 WIF price with a minimum of two participants requires a 0.01 WIF host bond. If only one participant joins, that participant can recover their 0.01 WIF and the host can recover the bond. If the session completes, the host can claim booking revenue less the 1% fee, plus the returned bond. Repeating a session creates fresh WIF commitments with new dates and terms. ETH pays transaction gas.
+WIF pays for bookings and the host's deposit. For example, an event charging 0.01 WIF per place and needing two bookings requires a 0.01 WIF host deposit. If only one place is booked, that participant can get their 0.01 WIF back and the host can withdraw the deposit. After the host checks in and the event's end time passes, the host can withdraw booking payments, less a 1% fee, and the deposit. Copying an event creates new bookings with new dates and rules. ETH pays network fees.
 
 ## Why a community would use it
 
-- Organize around committed reservations instead of a list of uncertain replies.
-- Start small with a minimum group and a clear booking cutoff.
-- Give participants a full-refund route if the group does not form, without requiring host permission.
-- Back the host’s cancellation and check-in commitments with WIF.
-- Keep the next session easy: reuse the plan, choose new dates, publish fresh terms.
+- Set the price, dates and minimum bookings before people pay.
+- Let people see the refund rules before booking.
+- Give participants a full refund if there are too few bookings, without asking the host.
+- Share the host's deposit among booked participants if a confirmed event is cancelled or the host does not check in.
+- Copy an event and choose new dates when you want to run it again.
 
-This first version is for existing WIF holders. A wallet, WIF and ETH for gas on chain 4663 are required for live use. Broad onboarding and sponsored gas remain future work.
+Real bookings need a wallet, WIF for payment and ETH for network fees on Robinhood Chain. Sample events need no wallet or money.
 
 ## Contract rules
 
