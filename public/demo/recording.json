@@ -1,12 +1,12 @@
 {
   "schema": "rally-recording-v1",
   "origin": "https://rally-wif.vercel.app",
-  "disclosure": "Controlled-wallet mainnet demo · No independent customers or workshop attendance claimed",
+  "disclosure": "Controlled-wallet mainnet demo \u00b7 No independent customers or workshop attendance claimed",
   "sourceCommit": "a637dc2e7cd9422b407e2aded86c582d83edc740",
   "recordedAt": "2026-11-06T10:22:55.232Z",
   "video": "/demo/rally-mainnet.mp4",
   "durationSeconds": 52.13,
-  "sha256": "1adc02b2c252bc48b7ce52872006f776d6b9b76b6bfd36963157101900039a33",
+  "sha256": "c77308e3ee2916d0de4677de356f26720311c3536a70b395472eaab2d807baac",
   "editedIdleWaiting": true,
   "transactionsSent": 0,
   "mockedResponses": 0,
@@ -48,5 +48,76 @@
     "totalLiabilityWIF": "0",
     "hostCreditWIF": "0",
     "participantCreditWIF": "0"
-  }
+  },
+  "silentRecordingSHA256": "1adc02b2c252bc48b7ce52872006f776d6b9b76b6bfd36963157101900039a33",
+  "audio": {
+    "present": true,
+    "codec": "AAC-LC",
+    "syntheticNarration": true,
+    "engine": "Kokoro v1.0",
+    "voice": "af_heart",
+    "language": "en-US",
+    "transcript": [
+      "Rally lets small groups reserve workshops, meetups, or feedback circles with WIF, a digital token.",
+      "The host sets fixed terms: a price, a minimum group, a booking deadline, and a deposit.",
+      "Here a controlled demo wallet reserved a place for point zero one WIF. This is the real transaction receipt.",
+      "The minimum was two, but only one place was reserved. After the deadline, the participant recovered the full payment.",
+      "The host then created a linked feedback circle with fresh terms. Repeating starts a new commitment.",
+      "The same demo wallet reserved again, then left before the cutoff. Both host deposits were returned.",
+      "These were controlled wallets. No customers or attendance are claimed. All receipts and the code are linked."
+    ],
+    "cueTiming": [
+      {
+        "segment": 1,
+        "originalSeconds": 6.592,
+        "speed": 1.1464347826086956,
+        "start": 0,
+        "end": 6
+      },
+      {
+        "segment": 2,
+        "originalSeconds": 5.248,
+        "speed": 1,
+        "start": 6,
+        "end": 13
+      },
+      {
+        "segment": 3,
+        "originalSeconds": 7.36,
+        "speed": 1,
+        "start": 13,
+        "end": 21
+      },
+      {
+        "segment": 4,
+        "originalSeconds": 6.826666666666667,
+        "speed": 1,
+        "start": 21,
+        "end": 30
+      },
+      {
+        "segment": 5,
+        "originalSeconds": 5.461333333333333,
+        "speed": 1,
+        "start": 30,
+        "end": 37
+      },
+      {
+        "segment": 6,
+        "originalSeconds": 6.165333333333334,
+        "speed": 1,
+        "start": 37,
+        "end": 45
+      },
+      {
+        "segment": 7,
+        "originalSeconds": 6.165333333333334,
+        "speed": 1,
+        "start": 45,
+        "end": 52.125
+      }
+    ],
+    "gainDB": 8
+  },
+  "browserVideoCodec": "H.264 Constrained Baseline, yuv420p"
 }

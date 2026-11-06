@@ -3,30 +3,42 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Rally · Mainnet demonstration</title>
+  <title>Rally · Watch a booking and refund</title>
   <style>
-    *{box-sizing:border-box}body{margin:0;background:#fafaf3;color:#203b30;font:18px/1.6 system-ui,sans-serif}main{max-width:1060px;margin:0 auto;padding:36px 24px 64px}a{color:inherit;text-underline-offset:4px}h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:24px 0 16px}video{display:block;width:100%;background:#203b30;border-radius:12px;margin:24px 0}.disclosure{padding:16px 20px;border:1px solid #c9d4bb;border-radius:10px;background:#eef3e3}.links{display:flex;gap:22px;flex-wrap:wrap}.detail{font-size:16px}li{margin:8px 0}code{font-size:14px;overflow-wrap:anywhere}h2{font-size:26px;margin-top:32px}
+    *{box-sizing:border-box}body{margin:0;background:#fafaf3;color:#203b30;font:18px/1.6 system-ui,sans-serif}main{max-width:1060px;margin:0 auto;padding:36px 24px 64px}a{color:inherit;text-underline-offset:4px}h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:24px 0 16px}video{display:block;width:100%;height:auto;background:#203b30;border-radius:12px;margin:24px 0 16px}.disclosure{padding:16px 20px;border:1px solid #c9d4bb;border-radius:10px;background:#eef3e3}.links{display:flex;gap:22px;flex-wrap:wrap}.detail{font-size:16px}li{margin:8px 0}code{font-size:14px;overflow-wrap:anywhere}h2{font-size:26px;margin-top:32px}button{font:inherit;background:#203b30;color:white;border:0;border-radius:8px;padding:12px 22px;cursor:pointer}.player-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:22px}.error{color:#942e2e}details{margin-top:22px}
   </style>
 </head>
 <body>
 <main>
   <a href="/">← Rally</a>
-  <h1>A reservation. A full refund. A fresh commitment.</h1>
-  <p>Rally gives small community sessions fixed WIF booking terms, a minimum group and a host bond. This short recording shows the public app and settled mainnet receipts.</p>
+  <h1>Watch a booking and a full refund.</h1>
+  <p>Rally lets you book a place in a workshop, meetup or feedback session. You pay with WIF, a cryptocurrency token. The host sets how many bookings are needed. If there are too few by the deadline, you can claim your full payment back. Watch the narrated recording below.</p>
   <p class="disclosure"><strong>Controlled-wallet technical demonstration.</strong> The host and participant wallets were controlled for this demo. No independent customers or actual workshop attendance are claimed.</p>
-  <video controls playsinline preload="metadata" aria-label="Rally controlled-wallet mainnet demonstration">
-    <source src="rally-mainnet.mp4" type="video/mp4">
-    <a href="rally-mainnet.mp4">Download the demonstration</a>
+  <video id="demo-video" controls playsinline preload="metadata" width="1440" height="1000" poster="/demo/poster.jpg" aria-label="Rally narrated controlled-wallet mainnet demonstration">
+    <source src="/demo/rally-mainnet.mp4?v=narrated" type="video/mp4">
+    <track kind="captions" src="/demo/captions.vtt" srclang="en" label="English narration">
+    <a href="/demo/rally-mainnet.mp4?v=narrated">Open the demonstration</a>
   </video>
-  <div class="links"><a href="rally-mainnet.mp4" download>Download MP4</a><a href="mainnet-demo.json">All 15 transaction receipts</a><a href="recording.json">Recording verification</a><a href="https://github.com/NSEVEjk0/rally-wif">Source code ↗</a></div>
-  <h2>Recorded mainnet proof</h2>
+  <div class="player-actions"><button id="play-demo" type="button">Play narrated demo</button><a href="/demo/rally-mainnet.mp4?v=narrated">Open video directly ↗</a></div>
+  <p id="video-error" class="error" role="status" hidden></p>
+  <div class="links"><a href="/demo/rally-mainnet.mp4?v=narrated" download>Download MP4</a><a href="/demo/mainnet-demo.json">All 15 transaction receipts</a><a href="/demo/recording.json">Recording verification</a><a href="https://github.com/NSEVEjk0/rally-wif">Source code ↗</a></div>
+  <h2>What happened in this recording</h2>
   <ul>
-    <li><a href="/?mode=live&amp;round=1">Round 1</a>: <a href="https://robinhoodchain.blockscout.com/tx/0x750c6babd52ac3431cae4d8228a383ca66a586f5d22b273e4e8a0ca746c4aa2c">0.01 WIF reservation</a>, followed by a <a href="https://robinhoodchain.blockscout.com/tx/0x164344eac52c3579f3957906254aa60e753b19fdc3c51e900fa2480ed6605ed4">full underfilled refund</a> after the genuine cutoff.</li>
-    <li><a href="/?mode=live&amp;round=2">Round 2</a>: fresh terms linked to round 1 and a <a href="https://robinhoodchain.blockscout.com/tx/0xc7b8811580d36085eb4d3cd4f673048218232b3d215e4a9a026c7c1a53bb006a">fresh reservation</a>. The participant left before cutoff; the host cancelled and recovered the bond.</li>
-    <li>Final demo accounting: zero contract WIF, liabilities and host/participant credits. Demo gas: 0.00002846110128 ETH.</li>
+    <li><a href="/?mode=live&amp;round=1">First event</a>: a participant <a href="https://robinhoodchain.blockscout.com/tx/0x750c6babd52ac3431cae4d8228a383ca66a586f5d22b273e4e8a0ca746c4aa2c">booked a place for 0.01 WIF</a>. There were too few bookings by the deadline, so the participant <a href="https://robinhoodchain.blockscout.com/tx/0x164344eac52c3579f3957906254aa60e753b19fdc3c51e900fa2480ed6605ed4">claimed the full payment back</a>.</li>
+    <li><a href="/?mode=live&amp;round=2">Second event</a>: the host copied the first event with new dates, and a participant <a href="https://robinhoodchain.blockscout.com/tx/0xc7b8811580d36085eb4d3cd4f673048218232b3d215e4a9a026c7c1a53bb006a">booked again</a>. The participant cancelled before the deadline and got a full refund. The host cancelled the event and withdrew the deposit.</li>
+    <li>All demo payments and deposits were refunded or withdrawn. The contract’s balance and amounts owed were zero. Network fees for the demo totalled 0.00002846110128 ETH.</li>
   </ul>
   <p class="detail">Official WIF on Robinhood Chain, chain 4663. <a href="https://robinhoodchain.blockscout.com/address/0x71C615c6Fa167a0843DaD6Ed715B8736b7f507DA">Contract: <code>0x71C615c6Fa167a0843DaD6Ed715B8736b7f507DA</code></a>.</p>
-  <p class="detail">The recording independently rechecks the deployed runtime and three receipts through the public RPC. It sends no transactions and mocks no responses. Completion and missed-check-in paths passed contract and real-WIF fork tests; they were not executed in this mainnet demonstration. Check-in records an onchain action and does not establish service quality or physical attendance.</p>
+  <p class="detail">The recording checked the deployed contract and three real transaction receipts. It sent no new payments and used no simulated responses. Contract tests also covered a finished event and a missed host check-in using real WIF code; those outcomes were not part of this live demo. Checking in with a wallet does not prove actual attendance or event quality.</p>
+  <p class="detail">Spoken narration is synthetic. English captions are available in the player.</p>
 </main>
+<script>
+  const video=document.getElementById('demo-video'),button=document.getElementById('play-demo'),message=document.getElementById('video-error');
+  const failed=()=>{message.hidden=false;message.textContent='The video could not load. Use “Open video directly” above to watch or download the MP4.';};
+  button.addEventListener('click',async()=>{try{if(!video.paused){video.pause();return;}video.muted=false;await video.play();message.hidden=true;}catch{failed();}});
+  video.addEventListener('error',failed);
+  video.addEventListener('playing',()=>{button.textContent='Pause demo';});
+  video.addEventListener('pause',()=>{button.textContent='Play narrated demo';});
+</script>
 </body>
 </html>

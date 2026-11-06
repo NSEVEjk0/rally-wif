@@ -18,18 +18,18 @@ type RawRound={creator:Address;price:bigint;bond:bigint;bonusPerSeat:bigint;mini
 type WindowWallet=Window&{ethereum?:EIP1193Provider&{on?:(event:string,cb:()=>void)=>void}};
 export function deployed():boolean {return Boolean(config.contract&&config.runtimeCodeHash&&config.deployBlock!==null);}
 export function contractAddress():Address {
-  if(!deployed()||config.chainId!==CHAIN_ID||config.token.toLowerCase()!==WIF.toLowerCase())throw new Error("Rally’s WIF contract deployment is awaiting the funded operator wallet.");
+  if(!deployed()||config.chainId!==CHAIN_ID||config.token.toLowerCase()!==WIF.toLowerCase())throw new Error("Real WIF bookings are not available right now.");
   const address=config.contract as string|null;
-  if(!address)throw new Error("Rally’s contract is awaiting deployment.");
+  if(!address)throw new Error("Real WIF bookings are not available right now.");
   return address as Address;
 }
 let verified=false;
 export async function verifyContract():Promise<void> {
   if(verified)return;
   const address=contractAddress();
-  if(await client.getChainId()!==CHAIN_ID)throw new Error("The read connection is on a different chain.");
+  if(await client.getChainId()!==CHAIN_ID)throw new Error("The booking connection is on the wrong network. Please try again later.");
   const code=await client.getCode({address});
-  if(!code||keccak256(code)!==config.runtimeCodeHash)throw new Error("The deployed contract does not match Rally’s pinned runtime code.");
+  if(!code||keccak256(code)!==config.runtimeCodeHash)throw new Error("The booking contract could not be verified. Payment is disabled.");
   verified=true;
 }
 export async function sessions(wanted?:bigint):Promise<Session[]> {
@@ -65,11 +65,11 @@ export async function accountDetails(owner:Address,ids:bigint[]) {
 }
 let connected:Address|undefined;
 export function account():Address|undefined{return connected;}
-function provider(){const p=(window as WindowWallet).ethereum;if(!p)throw new Error("Open Rally in a wallet browser, or use an Ethereum-compatible wallet extension.");return p;}
+function provider(){const p=(window as WindowWallet).ethereum;if(!p)throw new Error("Open Rally inside your wallet app, or connect an Ethereum wallet browser extension.");return p;}
 export async function connect():Promise<Address> {
   const wallet=createWalletClient({chain:network,transport:custom(provider())});
   const addresses=await wallet.requestAddresses();
-  if(!addresses[0]||addresses[0]===zeroAddress)throw new Error("No wallet address was selected.");
+  if(!addresses[0]||addresses[0]===zeroAddress)throw new Error("Choose a wallet account to continue.");
   connected=addresses[0];return connected;
 }
 export function watchWallet(callback:()=>void){
@@ -95,24 +95,24 @@ async function allowance(amount:bigint,progress:Progress){
   const {wallet,owner}=await walletReady();const address=contractAddress();
   const existing=await client.readContract({address:WIF,abi:tokenAbi,functionName:"allowance",args:[owner,address]});
   if(existing<amount){
-    progress("Review the exact WIF allowance in your wallet.");
+    progress("Approve only this WIF amount in your wallet.");
     const hash=await wallet.writeContract({address:WIF,abi:tokenAbi,functionName:"approve",args:[address,amount]});
-    progress("Waiting for the allowance transaction.");
+    progress("Waiting for your wallet approval to finish.");
     const receipt=await client.waitForTransactionReceipt({hash,timeout:60_000});
-    if(receipt.status!=="success")throw new Error("The WIF allowance did not succeed.");
+    if(receipt.status!=="success")throw new Error("Your wallet did not approve the WIF payment.");
   }
   return {wallet,owner,address};
 }
 async function included(hash:Hash,progress:Progress){
-  progress("Waiting for the transaction to be included.");
+  progress("Waiting for your wallet transaction to finish.");
   const receipt=await client.waitForTransactionReceipt({hash,timeout:60_000});
-  if(receipt.status!=="success")throw new Error("The transaction reverted. Refresh the session before trying again.");
+  if(receipt.status!=="success")throw new Error("The wallet transaction failed. Reload this event before trying again.");
   return {hash,block:receipt.blockNumber,logs:receipt.logs};
 }
 export async function createSession(terms:Terms,progress:Progress){
   const bond=terms.price*BigInt(terms.minimum)/2n;
   const {wallet,address}=await allowance(bond,progress);
-  progress("Review the fixed session terms and creator bond in your wallet.");
+  progress("Review the event details and host deposit in your wallet.");
   const hash=await wallet.writeContract({address,abi,functionName:"createRound",args:[{...terms,deadline:BigInt(terms.deadline),startAt:BigInt(terms.startAt),endAt:BigInt(terms.endAt)}]});
   const result=await included(hash,progress);
   const topic=keccak256(new TextEncoder().encode("RoundCreated(uint64,address,uint64,bytes32,uint256)"));
@@ -121,11 +121,11 @@ export async function createSession(terms:Terms,progress:Progress){
 }
 export async function reserveSession(s:Session,progress:Progress){
   const {wallet,address}=await allowance(s.price,progress);
-  progress("Confirm your WIF reservation in the wallet.");
+  progress("Confirm your booking payment in your wallet.");
   return included(await wallet.writeContract({address,abi,functionName:"reserve",args:[s.id]}),progress);
 }
 export async function sessionAction(name:"leave"|"refund"|"resolve"|"cancel"|"complete"|"checkIn"|"claimCredit"|"resolveMissedCheckIn",id:bigint|undefined,progress:Progress){
-  const {wallet}=await walletReady();progress("Review the session action in your wallet.");
+  const {wallet}=await walletReady();progress("Confirm this event action in your wallet.");
   const args=name==="claimCredit"?[]:name==="checkIn"?[id,keccak256(new TextEncoder().encode("Rally host check-in"))]:[id];
   return included(await wallet.writeContract({address:contractAddress(),abi,functionName:name,args}),progress);
 }

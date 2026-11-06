@@ -1,0 +1,22 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:06.000
+Rally lets small groups reserve workshops, meetups, or feedback circles with WIF, a digital token.
+
+00:00:06.000 --> 00:00:13.000
+The host sets fixed terms: a price, a minimum group, a booking deadline, and a deposit.
+
+00:00:13.000 --> 00:00:21.000
+Here a controlled demo wallet reserved a place for point zero one WIF. This is the real transaction receipt.
+
+00:00:21.000 --> 00:00:30.000
+The minimum was two, but only one place was reserved. After the deadline, the participant recovered the full payment.
+
+00:00:30.000 --> 00:00:37.000
+The host then created a linked feedback circle with fresh terms. Repeating starts a new commitment.
+
+00:00:37.000 --> 00:00:45.000
+The same demo wallet reserved again, then left before the cutoff. Both host deposits were returned.
+
+00:00:45.000 --> 00:00:52.125
+These were controlled wallets. No customers or attendance are claimed. All receipts and the code are linked.

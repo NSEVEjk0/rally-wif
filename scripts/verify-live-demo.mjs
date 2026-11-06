@@ -1,10 +1,19 @@
 import assert from 'node:assert/strict';
-import {readFile, writeFile, mkdir, copyFile} from 'node:fs/promises';
+import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {resolve} from 'node:path';
 import {chromium, expect} from '@playwright/test';
 import {createPublicClient, http, keccak256, decodeEventLog, decodeFunctionData, formatEther, erc20Abi} from 'viem';
+
+if(process.argv.includes('--playback-only')){
+  await import('./verify-video-playback.mjs');
+  process.exit(0);
+}
+if(process.argv.includes('--site-only')){
+  const checked=spawnSync(process.execPath,[resolve(import.meta.dirname,'../node_modules/@playwright/test/cli.js'),'test','tests/browser/preview.spec.ts','--reporter=line'],{cwd:resolve(import.meta.dirname,'..'),stdio:'inherit',timeout:120_000});
+  process.exit(checked.status??1);
+}
 
 // A read-only live browser check and recording. No wallet/provider is injected,
 // no RPC responses are mocked, and this script cannot sign or send transactions.
@@ -16,7 +25,6 @@ const origin='https://rally-wif.vercel.app';
 const rpc='https://rpc.mainnet.chain.robinhood.com';
 const explorer='https://robinhoodchain.blockscout.com';
 const out=resolve(root,'reports/submission');
-const publicOut=resolve(root,'public/demo');
 assert.equal(evidence.chainId,deployment.chainId);
 assert.equal(evidence.contract.toLowerCase(),deployment.contract.toLowerCase());
 assert.equal(evidence.token.toLowerCase(),deployment.token.toLowerCase());
@@ -133,7 +141,7 @@ async function showReceipt(label,title){
 
 try{
   await page.goto(`${origin}/?mode=live`,{waitUntil:'domcontentloaded'});
-  await expect(page.getByRole('heading',{name:'Make a plan. Make it happen.'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Book a place. Join a small event.'})).toBeVisible();
   await expect(page.getByRole('button',{name:'View Feedback circle · demo',exact:true})).toBeVisible({timeout:60_000});
   await expect(page.locator('.session-card')).toHaveCount(2);
   await scene('Rally: a small feedback circle, fixed WIF reservations, and a clear minimum to form the group.',null,6);
@@ -170,9 +178,5 @@ assert.ok(seconds>45&&seconds<=55,'The video must be between 45 and 55 seconds')
 const bytes=await readFile(destination);
 const sha256=createHash('sha256').update(bytes).digest('hex');
 const record={schema:'rally-recording-v1',origin,disclosure,sourceCommit:evidence.sourceCommit,recordedAt:new Date().toISOString(),video:'/demo/rally-mainnet.mp4',durationSeconds:seconds,sha256,editedIdleWaiting:true,transactionsSent:0,mockedResponses:0,verifiedRuntimeCodeHash:deployment.runtimeCodeHash,verifiedReceipts:verified,accounting:{contractWIF:formatEther(balance),totalLiabilityWIF:formatEther(liability),hostCreditWIF:formatEther(hostCredit),participantCreditWIF:formatEther(participantCredit)}};
-await mkdir(publicOut,{recursive:true});
-await copyFile(destination,resolve(publicOut,'rally-mainnet.mp4'));
-await copyFile(resolve(root,'docs/mainnet-demo.json'),resolve(publicOut,'mainnet-demo.json'));
-await writeFile(resolve(publicOut,'recording.json'),JSON.stringify(record,null,2)+'\n');
 await writeFile(resolve(out,'recording.json'),JSON.stringify(record,null,2)+'\n');
 console.log(JSON.stringify({liveBrowserPassed:true,video:destination,durationSeconds:seconds,sha256,transactionsSent:0,mockedResponses:0}));

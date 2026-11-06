@@ -1,6 +1,6 @@
 # Rally
 
-**Make a plan. Make it happen.**
+**Book small events with WIF and clear refund rules.**
 
 Rally helps the WIF community run workshops, feedback circles and meetups with clear commitments. A host publishes a session with fixed terms and a WIF bond. Participants reserve with WIF. If the group falls short, participants can claim their full reservation directly from the contract. If a confirmed session is cancelled or the host misses the onchain check-in window, the host bond is divided among reservations.
 
@@ -14,7 +14,7 @@ Community organizers collect tentative replies, then find out too late that a se
 
 Open [Rally](https://rally-wif.vercel.app).
 
-Watch the [52-second mainnet demonstration](https://rally-wif.vercel.app/demo/), with the controlled-wallet disclosure and links to every settled transaction.
+Watch the [52-second narrated mainnet demonstration](https://rally-wif.vercel.app/demo/), with the controlled-wallet disclosure and links to every settled transaction.
 
 The public preview labels every example as fictional. Explore a reservation, release it before cutoff, or advance the example clock to see an underfilled or missed-check-in refund. The calendar export and repeat-session draft work in the browser. No example action transfers WIF or claims a blockchain receipt.
 
@@ -71,7 +71,7 @@ npm run dev
 
 The workflow runs the contract tests, two 200-case fuzz campaigns, a real-WIF-bytecode fork lifecycle, domain checks, production build and desktop/mobile browser flows. Fork balances are changed only on an isolated local fork. They are not real mainnet activity.
 
-`test:browser-live` separately checks the public mainnet app, pinned runtime, recorded reservation/refund/repeat receipts and desktop/mobile layout. It records a captioned MP4 using installed Playwright and FFmpeg/libx264, sends no transactions and mocks no responses. Public recording verification is at [/demo/recording.json](https://rally-wif.vercel.app/demo/recording.json).
+`test:browser-live` separately checks the public mainnet app, pinned runtime, recorded reservation/refund/repeat receipts and desktop/mobile layout. It records a captioned MP4 privately under `reports/submission/`, sends no transactions and mocks no responses. Publishing is a separate step so a check cannot overwrite the narrated public video. `npm run test:browser-live -- --playback-only --require-audio` verifies public video playback. Public recording verification is at [/demo/recording.json](https://rally-wif.vercel.app/demo/recording.json).
 
 The browser accepts the contract only from the committed `src/deployment.json`, checks its runtime hash before allowances, and requests an exact allowance for the price or bond. No arbitrary contract or token is accepted through the URL. Live transaction results link to actual receipts.
 

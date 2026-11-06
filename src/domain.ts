@@ -62,20 +62,20 @@ export function readMeta(raw:string):SessionMeta {
 }
 export function draftTerms(d:Draft,now:number):Terms {
   const price=parseWif(d.price);
-  if(!d.title.trim()||d.title.trim().length>90)throw new Error("Give the session a title of 1–90 characters.");
+  if(!d.title.trim()||d.title.trim().length>90)throw new Error("Enter an event title between 1 and 90 characters.");
   if(!Number.isInteger(d.minimum)||d.minimum<2||!Number.isInteger(d.capacity)||d.minimum>d.capacity||d.capacity>100)throw new Error("Set a minimum of at least 2 and a capacity up to 100.");
   const deadline=Math.floor(new Date(d.deadline).getTime()/1000),startAt=Math.floor(new Date(d.startAt).getTime()/1000),endAt=Math.floor(new Date(d.endAt).getTime()/1000);
   if(![deadline,startAt,endAt].every(Number.isSafeInteger))throw new Error("Choose all three dates.");
-  if(deadline<now+300||deadline>now+30*86400)throw new Error("The booking cutoff must be 5 minutes to 30 days from now.");
-  if(startAt<deadline+1800||startAt>now+45*86400)throw new Error("Start at least 30 minutes after the cutoff, within 45 days.");
-  if(endAt<startAt+900||endAt>startAt+8*3600)throw new Error("The session must last 15 minutes to 8 hours.");
+  if(deadline<now+300||deadline>now+30*86400)throw new Error("Choose a booking deadline between 5 minutes and 30 days from now.");
+  if(startAt<deadline+1800||startAt>now+45*86400)throw new Error("Start the event at least 30 minutes after the booking deadline and within the next 45 days.");
+  if(endAt<startAt+900||endAt>startAt+8*3600)throw new Error("The event must last between 15 minutes and 8 hours.");
   if(d.description.length>700||d.location.length>120)throw new Error("Shorten the description or location.");
-  if(d.website){try{if(new URL(d.website).protocol!=="https:")throw new Error();}catch{throw new Error("Use an https:// public session link.");}}
-  if(!/^\d{1,20}$/.test(d.parentRound))throw new Error("Invalid previous session ID.");
+  if(d.website){try{if(new URL(d.website).protocol!=="https:")throw new Error();}catch{throw new Error("Enter an event information link that starts with https://.");}}
+  if(!/^\d{1,20}$/.test(d.parentRound))throw new Error("The event reference being copied is invalid.");
   const parentRound=BigInt(d.parentRound);
-  if(parentRound>2n**64n-1n)throw new Error("Invalid previous session ID.");
+  if(parentRound>2n**64n-1n)throw new Error("The event reference being copied is invalid.");
   const metadata=JSON.stringify({title:d.title.trim(),description:d.description.trim(),category:d.category,format:d.format,location:d.location.trim(),website:d.website.trim()});
-  if(new TextEncoder().encode(metadata).length>1800)throw new Error("Shorten the session details.");
+  if(new TextEncoder().encode(metadata).length>1800)throw new Error("Shorten the event details before publishing.");
   return {price,minimum:d.minimum,capacity:d.capacity,deadline,startAt,endAt,parentRound,metadata};
 }
 export function localDateInput(seconds:number):string {
