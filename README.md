@@ -6,6 +6,10 @@ Rally helps the WIF community run workshops, feedback circles and meetups with c
 
 After the session’s end time and recorded host check-in, anyone can settle it; the host can claim revenue and their bond. A host can turn a previous session into a fresh draft for the next one.
 
+## Problem and solution
+
+Community organizers collect tentative replies, then find out too late that a session will not fill. Rally gives a small group fixed booking terms, a minimum threshold and refundable WIF reservations. The host backs specified cancellation and check-in commitments with a bond, and participants keep a direct contract refund route.
+
 ## Try the product
 
 Open [Rally](https://rally-wif.vercel.app).
@@ -45,7 +49,7 @@ Check-in proves an onchain action, not real-world attendance or service quality.
 Node 22.12+ and Foundry v1.9.0 are used. Solidity is pinned to 0.8.30, optimizer 200, via IR, Cancun.
 
 ```sh
-npm install
+npm ci --no-audit --no-fund
 npm test
 npm run typecheck
 npm run build
@@ -64,4 +68,8 @@ Mainnet deployment requires the reviewed artifact and a bounded, funded operator
 
 The separate [operator launch guide](MAINNET.md) explains `/launch.html`, the exact pinned compiler build, a zero-value creation transaction with an explicit gas cap, uncertain-submission recovery, and independent receipt verification. The operator page never changes the public deployment manifest itself.
 
+`node scripts/create-operator-wallet.mjs` creates a dedicated local operator key and prints its public address. Reruns reuse the saved key; it remains in the ignored, private `.local/operator-wallet.json`. This command sends no transaction. ETH pays gas; WIF pays reservations and bonds. Genuine participant activity still requires their own wallets and agreement.
+
 MIT. Built for the World Is Flat community during the hackathon.
+
+See [submission and demo preparation](SUBMISSION.md) for the required real transactions, recording and availability period.
